@@ -1,19 +1,26 @@
+require("dotenv").config();
+
 const express = require("express");
+const connectDB = require("./config/db");
 
 const app = express();
 
-// Middleware: allows Express to read JSON
 app.use(express.json());
 
-// Import routes
+// Notes routes
 const noteRoutes = require("./routes/noteRoutes");
 
-// Connect routes
 app.use("/api/notes", noteRoutes);
 
-// Start server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+// Connect database before starting server
+const startServer = async () => {
+  await connectDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();
